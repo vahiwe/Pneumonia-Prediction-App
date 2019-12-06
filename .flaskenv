@@ -1,2 +1,9 @@
 FLASK_APP=pneu.py
 FLASK_DEBUG=1
+MAIL_SERVER=smtp.googlemail.com
+MAIL_PORT=465
+MAIL_USE_TLS=False
+MAIL_USE_SSL=True
+MAIL_USERNAME=testerapptest.500@gmail.com
+MAIL_PASSWORD=Confirm456
+MAIL_DEFAULT_SENDER=testerapptest.500@gmail.com
