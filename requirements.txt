@@ -11,3 +11,4 @@ pillow
 flask-cors
 flask-uploads
 flask-moment
+itsdangerous
