@@ -1,15 +1,18 @@
-from app import app, db
+from app import app, db, mail
 from flask import render_template, flash, redirect, url_for, request, jsonify, session
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_mail import Message
 from app.models import User, History
 from werkzeug.urls import url_parse
 from datetime import datetime, timedelta
-from app.forms import EditProfileForm, UploadForm
+from app.forms import EditProfileForm, UploadForm, PasswordChangeForm, EmailForm, PasswordForm
 from PIL import Image
+from threading import Thread
 import time
+from itsdangerous import URLSafeTimedSerializer
 import hashlib
-import datetime
+import datetime as dater
 import os
 import urllib.request
 from werkzeug.utils import secure_filename
@@ -20,6 +23,7 @@ import numpy as np
 import requests
 from .preprocess import load
 from flask_cors import CORS
+from sqlalchemy.exc import IntegrityError
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -35,12 +39,6 @@ configure_uploads(app, images)
 patch_request_class(app)  # set maximum file size, default is 16MB
 
 CORS(app)
-
-@app.route('/test', methods=['GET', 'POST'])
-def upload_fil():
-    form = UploadForm()
-    files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
-    return render_template('test.html', files_list=files_list, form=form)
 
 @app.route('/')
 @app.route('/index')
@@ -82,9 +80,116 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        send_confirmation_email(user.email)
         flash('Congratulations, you are now a registered user!')
+        flash('Thanks for registering!  Please check your email to confirm your email address.', 'success')
         return redirect(url_for('login'))
     return render_template('signUp.html', title='Register', form=form)
+
+@app.route('/reset', methods=["GET", "POST"])
+def reset():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    form = EmailForm()
+    if form.validate_on_submit():
+        try:
+            user = User.query.filter_by(email=form.email.data).first_or_404()
+        except:
+            flash('Invalid email address!', 'error')
+            return render_template('password_reset_email.html', form=form)
+         
+        if user.email_confirmed:
+            send_password_reset_email(user.email)
+            flash('Please check your email for a password reset link.', 'success')
+        else:
+            flash('Your email address must be confirmed before attempting a password reset.', 'error')
+        return redirect(url_for('login'))
+    return render_template('password_reset_email.html', form=form)
+
+
+@app.route('/reset/<token>', methods=["GET", "POST"])
+def reset_with_token(token):
+    try:
+        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
+    except:
+        flash('The password reset link is invalid or has expired.', 'error')
+        return redirect(url_for('login'))
+
+    form = PasswordForm()
+
+    if form.validate_on_submit():
+        try:
+            user = User.query.filter_by(email=email).first_or_404()
+        except:
+            flash('Invalid email address!', 'error')
+            return redirect(url_for('login'))
+
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your password has been updated!', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('reset_password_with_token.html', form=form, token=token)
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = confirm_serializer.loads(token, salt='email-confirmation-salt', max_age=3600)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'error')
+        return redirect(url_for('login'))
+ 
+    user = User.query.filter_by(email=email).first()
+ 
+    if user.email_confirmed:
+        if current_user.is_authenticated:
+            flash('Account already confirmed.', 'info')
+        else:
+            flash('Account already confirmed. Please login.', 'info')
+            return redirect(url_for('login'))
+    else:
+        user.email_confirmed = True
+        user.email_confirmed_on = datetime.utcnow()
+        db.session.add(user)
+        db.session.commit()
+        flash('Thank you for confirming your email address!')
+ 
+    return redirect(url_for('dashboard'))
+
+@app.route('/resend_confirmation')
+@login_required
+def resend_email_confirmation():
+    if current_user.email_confirmed:
+        flash('Email is already confirmed.')
+        return redirect(url_for('edit_profile'))
+
+    try:
+        send_confirmation_email(current_user.email)
+        flash('Email sent to confirm your email address.  Please check your email!', 'success')
+    except IntegrityError:
+        flash('Error!  Unable to send email to confirm your email address.', 'error')
+ 
+    return redirect(url_for('edit_profile'))
+
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = PasswordChangeForm()
+    if form.validate_on_submit():
+        if current_user.check_password(form.password.data):
+            current_user.set_password(form.password2.data)
+            flash('Your password has been changed.')
+            db.session.commit()
+        else:
+            flash('Your password is still the same.')
+        return redirect(url_for('change_password'))
+    if current_user.photo == None:
+        return render_template('password_change.html', form=form)
+    file_url = photos.url(current_user.photo)
+    return render_template('password_change.html', form=form, file_url=file_url)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -103,11 +208,6 @@ def edit_profile():
                 os.remove(file_path)
             photos.save(file)
             current_user.photo = file.filename
-        if len(form.password.data) > 8 and current_user.check_password(form.password.data) and len(form.password2.data) > 8:
-            current_user.set_password(form.password2.data)
-            flash('Your password has been changed.')
-        else:
-            flash('Your password is still the same.')
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('edit_profile'))
@@ -160,7 +260,7 @@ def upload_file():
         file = request.files['photo']
         ext = file.filename.rsplit('.', 1)[1]
         timestr = time.strftime("%Y%m%d-%H%M%S")
-        today = datetime.date.today()
+        today = dater.date.today()
         todaystr = today.isoformat()
         nam = timestr + "." + ext
         filename = images.save(file, folder=todaystr, name=nam)
@@ -216,3 +316,36 @@ def allowed_file(filename):
 def before_request():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=15)
+
+
+def send_async_email(msg):
+    with app.app_context():
+        mail.send(msg)
+ 
+ 
+def send_email(subject, recipients, text_body, html_body):
+    msg = Message(subject, recipients=recipients)
+    msg.body = text_body
+    msg.html = html_body
+    thr = Thread(target=send_async_email, args=[msg])
+    thr.start()
+
+
+def send_confirmation_email(user_email):
+    confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+    confirm_url = url_for('confirm_email',token=confirm_serializer.dumps(user_email, salt='email-confirmation-salt'),_external=True)
+
+    html = render_template('email_confirmation.html',confirm_url=confirm_url)
+
+    send_email('Confirm Your Email Address', [user_email], html, html)
+
+
+def send_password_reset_email(user_email):
+    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+    password_reset_url = url_for('reset_with_token',token=password_reset_serializer.dumps(user_email, salt='password-reset-salt'),_external=True)
+
+    html = render_template('email_password_reset.html',password_reset_url=password_reset_url)
+
+    send_email('Password Reset Requested', [user_email], html, html)

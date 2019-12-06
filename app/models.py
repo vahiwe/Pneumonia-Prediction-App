@@ -20,6 +20,10 @@ class User(UserMixin, db.Model):
     gender = db.Column(db.String(64))
     profession = db.Column(db.String(64))
     password_hash = db.Column(db.String(128))
+    email_confirmation_sent_on = db.Column(
+        db.DateTime, default=datetime.utcnow)
+    email_confirmed = db.Column(db.Boolean, nullable=True, default=False)
+    email_confirmed_on = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.email)
