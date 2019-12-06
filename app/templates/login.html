@@ -62,7 +62,8 @@
                     {% endif %}
                     {% endwith %}
                     <p>{{ form.submit(class="submit") }}</p>
-                    <p>Don't have an account ? <a href="{{ url_for('register') }}">Sign Up</a></p>
+                    <p>Don't have an account ? <a href="{{ url_for('register') }}">Sign Up</a></p><br>
+                    <p>Forgot your password ? <a href="{{ url_for('reset') }}">Reset</a></p>
                 </form>
             </section>
         </section>
