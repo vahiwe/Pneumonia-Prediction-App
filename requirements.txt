@@ -1,0 +1,13 @@
+flask
+python-dotenv
+flask-wtf
+flask-sqlalchemy
+flask-migrate
+flask-login
+flask-mail
+pyjwt
+scikit-image
+pillow
+flask-cors
+flask-uploads
+flask-moment

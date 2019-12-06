@@ -1,0 +1,68 @@
+@import "config";
+
+
+form {
+    width: 100%;
+    text-align: center;
+    padding: 30px;
+
+    label {
+      display: block;
+      margin: 15px auto 10px auto;
+      text-align: left;
+      width: 80%;
+      font-weight: bold;
+      color: black;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #73b9db;
+      padding: 10px;
+      outline: none;
+      width: 80%;
+    }
+
+    .submit {
+      background-color: #73b9db;
+      margin: 80px auto 20px auto;
+      color: white;
+      padding: 10px 30px;
+      border-radius: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      width: 200px;
+    }
+
+    .submit:hover {
+      background-color: white;
+      color: #73b9db;
+      border: 1px solid #73b9db;
+    }
+    p {
+      a {
+        color: #73b9db;
+        cursor: pointer;
+        text-decoration: none;
+      }
+    }
+  }
+
+  #register {
+    .special {
+      text-align: left;
+      input, select {
+        display: inline-block;
+        width: auto;
+        margin-left: 10%;
+      }
+
+      select {
+          height: 30px;
+      }
+    }
+
+    .submit {
+      margin-top: 20px;
+    }
+  }

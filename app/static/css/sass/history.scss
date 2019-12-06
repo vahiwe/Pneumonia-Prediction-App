@@ -1,0 +1,55 @@
+@import "config";
+
+body {
+  overflow-x: hidden;
+}
+.content_items {
+  display: block !important;
+  table,
+  th,
+  td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px;
+  }
+  .table {
+    height:500px;
+    width: 100%;
+    overflow: scroll;
+  }
+  table {
+    margin: 0 auto;
+    text-align: left;
+    width: 150%;
+  }
+
+  th {
+    padding: 5px 10px;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  td:first-child {
+    text-align: center;
+    padding-left: 0;
+  }
+
+  td {
+      .delete, .send {
+          display: inline-block;
+          width: 100px;
+          background-color: red;
+          color: white;
+          border: 1px solid red;
+          padding: 5px 20px;
+          margin-bottom: 5px;
+          text-align: center;
+          cursor: pointer;
+      }
+
+      .send {
+          background-color: green;
+          border: 1px solid green;
+      }
+  }
+}

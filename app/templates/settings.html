@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Settings || PneumoDoc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashoard.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css')}}">
+
+</head>
+
+<body>
+    <main>
+        <section class="container">
+            <header>
+                <h3><span>my</span>Dashboard</h3>
+            </header>
+            <div class="navButton">
+                <i class="fa fa-arrow-right" id="control"></i>
+            </div>
+            <section class="wrapper">
+                <section class="sidebar" id="sidebar">
+
+                    <div class="row1">
+                        {% if file_url %}
+                        <img src="{{ file_url }}" alt="">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='img/user.png')}}" alt="">
+                        {% endif %}
+                        <span class="details">
+                            <h3>{{ current_user.lastname }}</h3>
+                            <p>{{ current_user.profession }}</p>
+                        </span>
+
+                    </div>
+                    <div class="row2">
+                        <ul>
+                            <li><a href="{{ url_for('dashboard') }}"> <i class="fa fa-dashboard"></i> Dashboard </a>
+                            </li>
+                            <li><a href="{{ url_for('history') }}"> <i class="fa fa-history"></i> History </a></li>
+                            <li><a href="{{ url_for('edit_profile') }}"> <i class="fa fa-cogs"></i> Settings </a></li>
+                            <li><a href="{{ url_for('logout') }}"> <i class="fa fa-sign-out"></i> Logout </a></li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="content">
+                    <section class="message">
+                        <h3>Welcome back <span id="user_name">{{ current_user.firstname }}
+                                {{ current_user.lastname }}</span> <span id="time"></span></h3>
+                        <p>
+                            <!--insert your message here-->
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div>
+                                <p style="color:blue;">[{{ message }}]</p>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </p>
+                    </section>
+
+                    <section class="content_items">
+                        <form action="" name="Register" id="register" method='post' enctype='multipart/form-data'>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                <label for="image">Change Profile Picture:</label>
+                                {{ form.photo()}}
+                                {% for error in form.photo.errors %}
+                                <p style="color: red;">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.firstname.label }}
+                                {{ form.firstname(placeholder="Enter your Firstname") }}
+                                {% for error in form.firstname.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.lastname.label }}
+                                {{ form.lastname(placeholder="Enter your Lastname") }}
+                                {% for error in form.lastname.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.email.label }}
+                                {{ form.email(placeholder="Enter your email address",readonly=true,disabled=true) }}
+                                {% for error in form.email.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password.label }}
+                                {{ form.password(placeholder="Enter your old password") }}
+                                {% for error in form.password.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password2.label }}
+                                {{ form.password2(placeholder="Enter your new password") }}
+                                {% for error in form.password2.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group special">
+                                <table style="padding-left:89px;">
+                                    <tr>
+                                        <td>{{ form.gender.label }}</td>
+                                    </tr>
+                                    <tr>
+                                        {% for subfield in form.gender %}
+                                        <td>{{ subfield }}{{ subfield.label }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                                {% for error in form.gender.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group special">
+                                {{ form.profession.label }}
+                                {{ form.profession() }}
+                                {% for error in form.profession.errors %}
+                                <p style="color: red;">[{{ error }}]</p>
+                                {% endfor %}
+                            </div>
+                            <p>{{ form.submit(class="submit") }}</p>
+                        </form>
+                    </section>
+                </section>
+            </section>
+        </section>
+
+    </main>
+</body>
+<script>
+    let control = document.getElementById("control");
+    let sidebar = document.getElementById("sidebar");
+    let timeEl = document.getElementById("time");
+
+    //Time update
+    const GetTime = () => {
+        let date = new Date();
+        myTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        timeEl.innerHTML = myTime;
+    };
+    setInterval(GetTime, 100)
+
+    //Click event on sidebar
+    control.addEventListener("click", () => {
+        let moveEl = sidebar.style.left;
+        if (moveEl === "-350px") {
+            sidebar.style.left = 0;
+            control.classList.remove("fa-arrow-right");
+            control.classList.add("fa-arrow-left");
+        } else {
+            sidebar.style.left = "-350px";
+            control.classList.add("fa-arrow-right");
+            control.classList.remove("fa-arrow-left")
+
+        }
+    })
+</script>
+
+</html>

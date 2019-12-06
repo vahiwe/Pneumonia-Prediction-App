@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>About || PneumoDoc</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css')}}">
+</head>
+
+<body>
+    <main>
+        <section class="container">
+            <header>
+                <div class="anime"></div>
+                <nav>
+                    <span class="name">PneumoDocs</span>
+                    <div class="navButton">
+                        <div class="stick"></div>
+                        <div class="stick"></div>
+                        <div class="stick"></div>
+                    </div>
+                    <ul id="navBar">
+                        {% if current_user.is_anonymous %}
+                        <a href="{{ url_for('index') }}">Home</a>
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="{{ url_for('login') }}">Login</a>
+                        <a href="{{ url_for('register') }}">Sign Up</a>
+                        {% else %}
+                        <a href="{{ url_for('index') }}">Home</a>
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </header>
+            <section class="content">
+                <section class="aboutApp">
+                    <h1>About App</h1>
+                    <h3>Transforming Healthcare in Africa through Artificial Intelligence</h3>
+                    <p>Emerging technologies hold great possibilities to improving the current state of healthcare in
+                        Africa.</p>
+                    <p>There is a huge deficit in the ratio of Doctors to patients in Africa and this seriously reduces
+                        the accesss Africans have to quality healthcare</p>
+                    <p>PneumoDoc makes use of computer vision technologies to examine X-rays scans and make inferences
+                        from scans if a patient has Pnuemonia or not.</p>
+                    <p>PnuemoDoc is an X-ray AI assistant for Doctors and Radiologist to help detect Pnuemonia in scans
+                        with great accuracy.</p>
+                </section>
+                <section class="aboutTeam">
+                    <h1>About Team</h1>
+                    <div class="teamContainer">
+                        <article class="teamMember">
+                            <img src="{{ url_for('static', filename='img/profX.jpeg')}}" alt="">
+                            <h3>Ahiwe Onyebuchi V.</h3>
+                            <p>Cloud DevOps & ML</p>
+                        </article>
+                        <article class="teamMember">
+                            <img src="{{ url_for('static', filename='img/ugo chigere.jpeg')}}" alt="">
+                            <h3>Emmanuel Chigere</h3>
+                            <p>ML Engineer</p>
+                        </article>
+                        <article class="teamMember">
+                            <img src="{{ url_for('static', filename='img/omobolaji.jpeg')}}" alt="">
+                            <h3>Omobolaji Balogun</h3>
+                            <p>Machine Learning</p>
+                        </article> <br>
+                        <article class="teamMember">
+                            <img src="{{ url_for('static', filename='img/pukado.png')}}" alt="">
+                            <h3>Oladokun Pelumi</h3>
+                            <p>Machine Learning</p>
+                        </article>
+                        <article class="teamMember">
+                            <img src="{{ url_for('static', filename='img/phileo.jpeg')}}" alt="">
+                            <h3>Emmanuel Owojori</h3>
+                            <p>Web Developer</p>
+                        </article>
+                    </div>
+                </section>
+            </section>
+            <footer>PneumoDoc bridging gaps...</footer>
+        </section>
+    </main>
+</body>
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+
+</html>

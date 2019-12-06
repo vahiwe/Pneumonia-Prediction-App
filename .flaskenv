@@ -1,0 +1,2 @@
+FLASK_APP=pneu.py
+FLASK_DEBUG=1

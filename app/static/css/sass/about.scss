@@ -1,0 +1,190 @@
+@import "config";
+
+@keyframes anime {
+  0% {
+    background-color: white;
+    transform: rotate(15deg);
+  }
+  5% {
+    background-color: red;
+    transform: rotate(40deg);
+  }
+  25% {
+    background-color: orange;
+    transform: rotateX(70deg);
+  }
+  40% {
+    background-color: yellow;
+    transform: rotateX(120deg);
+  }
+  60% {
+    background-color: green;
+    transform: rotate(200deg);
+  }
+  75% {
+    background-color: blue;
+    transform: rotateX(270deg);
+  }
+  90% {
+    background-color: indigo;
+    transform: rotateX(90deg);
+  }
+  100% {
+    background-color: violet;
+    transform: rotateX(360deg);
+  }
+}
+
+main {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("../img/img1.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+
+  .container {
+    min-height: 100vh;
+    background-color: rgba(0, 0, 0, 0.507);
+    padding: 0 20px;
+    position: relative;
+    text-align: center;
+
+    .anime {
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      animation-name: anime;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+    }
+
+    .anime:hover {
+      animation-name: anime;
+      animation-duration: 3s;
+    }
+
+    header {
+      padding: 20px;
+      height: 100px;
+
+      ul {
+        text-align: right;
+        a {
+          color: white;
+          font-size: 20px;
+          margin-left: 20px;
+          display: inline-block;
+        }
+        a:hover {
+          border-bottom: 2px solid #23cec5;
+        }
+      }
+    }
+
+    .content {
+      .aboutApp {
+        margin: 50px auto;
+        color: white;
+        h1 {
+          margin: auto;
+          font-size: 2em;
+          margin-bottom: 20px;
+          border-bottom: 2px solid white;
+          width: auto;
+          width: 200px;
+          padding-bottom: 10px;
+        }
+        h3 {
+          font-size: 25px;
+        }
+
+        p {
+          margin: 15px;
+          font-size: 20px;
+        }
+      }
+
+      .aboutTeam {
+        h1 {
+          margin: auto;
+          font-size: 2em;
+          margin-bottom: 20px;
+          color: white;
+          width: auto;
+          border-bottom: 2px solid white;
+          width: 200px;
+          padding-bottom: 10px;
+        }
+        .teamMember {
+          border: 1px solid white;
+          width: 300px;
+          height: 400px;
+          display: inline-block;
+          margin: 20px auto;
+          padding: 20px;
+          background-color: white;
+          border-radius: 10px;
+
+          img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+          }
+
+          h3 {
+            margin: 20px auto;
+          }
+          
+        }
+      }
+    }
+
+    footer {
+      padding: 20px;
+      margin-top: 50px;
+      color: #23cec5;
+      background-color: white;
+      text-align: center;
+    }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  header { 
+    .navButton {
+      border: 1px solid white;
+      width: 30px;
+      z-index: 2;
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      padding: 3px 3px 0 3px;
+      cursor: pointer;
+
+      .stick {
+        background-color: white;
+        height: 3px;
+        margin-bottom: 3px;
+      }
+    }
+
+    #navBar {
+      flex-direction: column;
+      align-items: right;
+      margin-top: 40px;
+      display: none;
+    }
+    a {
+      display: block !important;
+      margin-bottom: 10px;
+    }
+    a:hover {
+      border: none !important;
+      opacity: 0.7;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home || PneumoDoc</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+</head>
+
+<body>
+    <main>
+        <section class="container">
+            <header>
+                <div class="anime"></div>
+                <nav>
+                    <span class="name">PneumoDocs</span>
+                    <div class="navButton">
+                        <div class="stick"></div>
+                        <div class="stick"></div>
+                        <div class="stick"></div>
+                    </div>
+                    <ul id="navBar">
+                        {% if current_user.is_anonymous %}
+                        <a href="{{ url_for('index') }}">Home</a>
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="{{ url_for('login') }}">Login</a>
+                        <a href="{{ url_for('register') }}">Sign Up</a>
+                        {% else %}
+                        <a href="{{ url_for('index') }}">Home</a>
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </header>
+            <section class="content">
+                <section class="row1">
+                    <h2 class="app_name">PneumoDoc</h2>
+                    <p>...bridging the gap between Doctors and pneumonia patients</p>
+                </section>
+                <div class="card_container">
+                    <section class="row2">
+                        <h3>Welcome!</h3>
+                        <i class="fa fa-laptop-medical"></i>
+                        <p>There is a shortage of Radiologists in Africa and this invention aims at bridging the gap by
+                            providing quality and accurate inference from x-ray scans</p>
+                        <a href="{{ url_for('login') }}"><button>Get Started</button></a>
+
+                    </section>
+                    <section class="row3">
+                        <h3>Fast and Efficient</h3>
+                        <i class="fas fa-shipping-fast"></i>
+                        <p>Prediction is made in few seconds after uploading scan with great accuracy</p>
+                        <a href="{{ url_for('login') }}"><button>Get Started</button></a>
+
+                    </section>
+                    <section class="row4">
+                        <h3>Tackling Social Problem with AI</h3>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Making access to advance diagnostics services possoble to the underserved people of Africa
+                        </p>
+                        <a href="{{ url_for('login') }}"><button>Get Started</button></a>
+                    </section>
+                </div>
+                <div class="other">
+                    <section class="row5">
+                        <h3>Partner With Us</h3>
+                        <i class="fas fa-hands-helping"></i>
+                        <p>
+                            We want to use data to make healthcare better for Africa. We intend to work with hosiptals,
+                            healthcare service providers to use AI to build novel solutions. We also accept contributors
+                            in form of data to help develop other products
+                        </p>
+                    </section>
+                </div>
+                <!-- <img src="img/img4.png" alt="" srcset="">
+                <h3>Welcome!</h3>
+                <p>PneumoDoc is an artificial intelligence platform to help Doctors diagnose patients with Pneumonia from X-ray Scans.</p> -->
+                {% block content %}
+                {% endblock content %}
+            </section>
+            <footer>PneumoDoc bridging gaps...</footer>
+        </section>
+    </main>
+</body>
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+
+</html>
