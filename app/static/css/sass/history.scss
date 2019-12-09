@@ -8,7 +8,7 @@ body {
   table,
   th,
   td {
-    border: 1px solid black;
+    border: 1px solid gray;
     border-collapse: collapse;
     padding: 10px;
   }
@@ -20,13 +20,15 @@ body {
   table {
     margin: 0 auto;
     text-align: left;
-    width: 150%;
+    width: 100%;
   }
 
   th {
     padding: 5px 10px;
     text-align: center;
     padding-left: 0;
+    background-color: black;
+    color: white;
   }
 
   td:first-child {
@@ -51,5 +53,11 @@ body {
           background-color: green;
           border: 1px solid green;
       }
+  }
+}
+
+@media screen and (max-width: 992px){
+  table {
+    width: 130% !important;
   }
 }

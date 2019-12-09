@@ -136,3 +136,4 @@ feedback.txt
 *egg-info/
 static/daygraph.png
 static/piechart.png
+.vs/
