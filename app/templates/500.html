@@ -1,6 +1,37 @@
-{% extends 'index.html' %}
-{% block content %}
-<h1>Something's wrong!</h1>
-<p>Fortunately we are on the job, and you can just return home!</p>
-<p><a href="{{url_for('index')}}">Back</a></p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Error 500</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/404.css')}}">
+</head>
+
+<body>
+    <header>
+        <a href="index.html">Home</a>
+    </header>
+    <section class="content">
+        <div class="row1">
+            <h1>ERROR</h1>
+            <span>5</span>
+            <span id="zero"><i class="fa fa-cog"></i></span>
+            <span id="zero"><i class="fa fa-cog"></i></span>
+            <p>OOOOOPPPSS!!!</p>
+
+        </div>
+        <div class="row2">
+            <h3>UNEXPECTED ERROR!</h3>
+            <p>
+                <a href="index.html"><i class="fa fa-arrow-left"></i> &nbsp; &nbsp; Go back</a>
+
+            </p>
+        </div>
+    </section>
+</body>
+
+</html>

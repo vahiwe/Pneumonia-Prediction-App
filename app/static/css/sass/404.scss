@@ -1,0 +1,86 @@
+@import "config";
+
+@keyframes changeColor {
+    0% {
+        color: purple;
+    }
+    25% {
+        color: yellow;
+    }
+    50% {
+        color: blue;
+    }
+    75% {
+        color: red;
+    }
+    100% {
+        color: black;
+    }
+}
+
+body {
+    background-color: darkred;
+    color: white;
+
+    header {
+        height: 60px;
+        padding: 20px; 
+        border-bottom: 2px solid white;
+        box-shadow: 1px 1px 5px white;
+    }
+
+    a {
+        color: white;
+    }
+    a:hover {
+        opacity: .7;
+    }
+
+    .content {
+        padding: 7%;
+        text-align: center;
+
+        .row1 {
+
+    
+
+            span {
+                font-size: 100px;
+                margin-right: 20px;
+                font-weight: bold;
+            }
+
+            #zero {
+                text-shadow:  5px 5px 5px white;
+                display: inline-block;
+                animation-name: changeColor;
+                animation-duration: 10s;
+                animation-iteration-count: infinite;
+            }
+            #zero:hover {
+               color: brown;
+               transform: rotate(360deg);
+               transition: transform 2s;
+            }
+
+            p {
+                margin-top: 20px;
+            }
+        }
+
+        .row2 {
+            margin: 50px 0;
+
+            h3{
+                text-transform: uppercase;
+                margin: 30px 0;
+            }
+            a {
+                border: 1px solid white;
+                border-radius: 5px;
+                padding: 10px 30px;
+                font-weight: 200px;
+            }
+        }
+    }
+}
