@@ -300,6 +300,17 @@ def upload_file():
     image_count = History.query.filter().order_by(History.timestamp.desc()).count()
     return render_template("dashboard.html", form=form, file_url=file_url, image_count=image_count)
 
+
+@app.route('/delete/<folder>/<filename>')
+def delete_file(folder, filename):
+    file_p = folder+"/"+filename
+    file_path = images.path(folder+"/"+filename)
+    item = History.query.filter_by(photo=file_p).first_or_404()
+    db.session.delete(item)
+    db.session.commit()
+    os.remove(file_path)
+    return redirect(url_for('history'))
+
 @app.route('/about')
 def about():
     return render_template('about.html')
