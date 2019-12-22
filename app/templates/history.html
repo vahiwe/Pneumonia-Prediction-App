@@ -44,8 +44,6 @@
                             </li>
                             <li><a href="{{ url_for('history') }}"> <i class="fa fa-history"></i> History </a></li>
                             <li><a href="{{ url_for('edit_profile') }}"> <i class="fa fa-cogs"></i> Settings </a></li>
-                            <li><a href="{{ url_for('change_password') }}"> <i class="fa fa-key"></i> Change Password
-                                </a></li>
                             <li><a href="{{ url_for('logout') }}"> <i class="fa fa-sign-out"></i> Logout </a></li>
                         </ul>
                     </div>
@@ -57,11 +55,6 @@
                         <p>
                             <!--insert your message here-->
                         </p>
-                        {% if not current_user.email_confirmed %}
-                        <p>Your email is not confirmed. <a href="{{ url_for('resend_email_confirmation') }}"
-                                style="color: #73b9db;cursor: pointer;text-decoration: none;">Resend Email
-                                Confirmation</a></p>
-                        {% endif %}
                     </section>
 
                     <section class="content_items">

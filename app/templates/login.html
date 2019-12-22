@@ -25,8 +25,6 @@
                         {% if current_user.is_anonymous %}
                         <a href="{{ url_for('index') }}">Home</a>
                         <a href="{{ url_for('about') }}">About</a>
-                        <a href="{{ url_for('login') }}">Login</a>
-                        <a href="{{ url_for('register') }}">Sign Up</a>
                         {% else %}
                         <a href="{{ url_for('index') }}">Home</a>
                         <a href="{{ url_for('dashboard') }}">Dashboard</a>
@@ -62,8 +60,6 @@
                     {% endif %}
                     {% endwith %}
                     <p>{{ form.submit(class="submit") }}</p>
-                    <p>Don't have an account ? <a href="{{ url_for('register') }}">Sign Up</a></p><br>
-                    <p>Forgot your password ? <a href="{{ url_for('reset') }}">Reset</a></p>
                 </form>
             </section>
         </section>

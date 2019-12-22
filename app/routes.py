@@ -70,126 +70,126 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(email=form.email.data, firstname=form.firstname.data, lastname=form.lastname.data, gender=form.gender.data, profession=form.profession.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        send_confirmation_email(user.email)
-        flash('Congratulations, you are now a registered user!')
-        flash('Thanks for registering!  Please check your email to confirm your email address.', 'success')
-        return redirect(url_for('login'))
-    return render_template('signUp.html', title='Register', form=form)
+# @app.route('/register', methods=['GET', 'POST'])
+# def register():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('dashboard'))
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         user = User(email=form.email.data, firstname=form.firstname.data, lastname=form.lastname.data, gender=form.gender.data, profession=form.profession.data)
+#         user.set_password(form.password.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         send_confirmation_email(user.email)
+#         flash('Congratulations, you are now a registered user!')
+#         flash('Thanks for registering!  Please check your email to confirm your email address.', 'success')
+#         return redirect(url_for('login'))
+#     return render_template('signUp.html', title='Register', form=form)
 
-@app.route('/reset', methods=["GET", "POST"])
-def reset():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    form = EmailForm()
-    if form.validate_on_submit():
-        try:
-            user = User.query.filter_by(email=form.email.data).first_or_404()
-        except:
-            flash('Invalid email address!', 'error')
-            return render_template('password_reset_email.html', form=form)
+# @app.route('/reset', methods=["GET", "POST"])
+# def reset():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('dashboard'))
+#     form = EmailForm()
+#     if form.validate_on_submit():
+#         try:
+#             user = User.query.filter_by(email=form.email.data).first_or_404()
+#         except:
+#             flash('Invalid email address!', 'error')
+#             return render_template('password_reset_email.html', form=form)
          
-        if user.email_confirmed:
-            send_password_reset_email(user.email)
-            flash('Please check your email for a password reset link.', 'success')
-        else:
-            flash('Your email address must be confirmed before attempting a password reset.', 'error')
-        return redirect(url_for('login'))
-    return render_template('password_reset_email.html', form=form)
+#         if user.email_confirmed:
+#             send_password_reset_email(user.email)
+#             flash('Please check your email for a password reset link.', 'success')
+#         else:
+#             flash('Your email address must be confirmed before attempting a password reset.', 'error')
+#         return redirect(url_for('login'))
+#     return render_template('password_reset_email.html', form=form)
 
 
-@app.route('/reset/<token>', methods=["GET", "POST"])
-def reset_with_token(token):
-    try:
-        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
-    except:
-        flash('The password reset link is invalid or has expired.', 'error')
-        return redirect(url_for('login'))
+# @app.route('/reset/<token>', methods=["GET", "POST"])
+# def reset_with_token(token):
+#     try:
+#         password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+#         email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
+#     except:
+#         flash('The password reset link is invalid or has expired.', 'error')
+#         return redirect(url_for('login'))
 
-    form = PasswordForm()
+#     form = PasswordForm()
 
-    if form.validate_on_submit():
-        try:
-            user = User.query.filter_by(email=email).first_or_404()
-        except:
-            flash('Invalid email address!', 'error')
-            return redirect(url_for('login'))
+#     if form.validate_on_submit():
+#         try:
+#             user = User.query.filter_by(email=email).first_or_404()
+#         except:
+#             flash('Invalid email address!', 'error')
+#             return redirect(url_for('login'))
 
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your password has been updated!', 'success')
-        return redirect(url_for('login'))
+#         user.set_password(form.password.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Your password has been updated!', 'success')
+#         return redirect(url_for('login'))
 
-    return render_template('reset_password_with_token.html', form=form, token=token)
+#     return render_template('reset_password_with_token.html', form=form, token=token)
 
-@app.route('/confirm/<token>')
-def confirm_email(token):
-    try:
-        confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        email = confirm_serializer.loads(token, salt='email-confirmation-salt', max_age=3600)
-    except:
-        flash('The confirmation link is invalid or has expired.', 'error')
-        return redirect(url_for('login'))
+# @app.route('/confirm/<token>')
+# def confirm_email(token):
+#     try:
+#         confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+#         email = confirm_serializer.loads(token, salt='email-confirmation-salt', max_age=3600)
+#     except:
+#         flash('The confirmation link is invalid or has expired.', 'error')
+#         return redirect(url_for('login'))
  
-    user = User.query.filter_by(email=email).first()
+#     user = User.query.filter_by(email=email).first()
  
-    if user.email_confirmed:
-        if current_user.is_authenticated:
-            flash('Account already confirmed.', 'info')
-        else:
-            flash('Account already confirmed. Please login.', 'info')
-            return redirect(url_for('login'))
-    else:
-        user.email_confirmed = True
-        user.email_confirmed_on = datetime.utcnow()
-        db.session.add(user)
-        db.session.commit()
-        flash('Thank you for confirming your email address!')
+#     if user.email_confirmed:
+#         if current_user.is_authenticated:
+#             flash('Account already confirmed.', 'info')
+#         else:
+#             flash('Account already confirmed. Please login.', 'info')
+#             return redirect(url_for('login'))
+#     else:
+#         user.email_confirmed = True
+#         user.email_confirmed_on = datetime.utcnow()
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Thank you for confirming your email address!')
  
-    return redirect(url_for('dashboard'))
+#     return redirect(url_for('dashboard'))
 
-@app.route('/resend_confirmation')
-@login_required
-def resend_email_confirmation():
-    if current_user.email_confirmed:
-        flash('Email is already confirmed.')
-        return redirect(url_for('edit_profile'))
+# @app.route('/resend_confirmation')
+# @login_required
+# def resend_email_confirmation():
+#     if current_user.email_confirmed:
+#         flash('Email is already confirmed.')
+#         return redirect(url_for('edit_profile'))
 
-    try:
-        send_confirmation_email(current_user.email)
-        flash('Email sent to confirm your email address.  Please check your email!', 'success')
-    except IntegrityError:
-        flash('Error!  Unable to send email to confirm your email address.', 'error')
+#     try:
+#         send_confirmation_email(current_user.email)
+#         flash('Email sent to confirm your email address.  Please check your email!', 'success')
+#     except IntegrityError:
+#         flash('Error!  Unable to send email to confirm your email address.', 'error')
  
-    return redirect(url_for('edit_profile'))
+#     return redirect(url_for('edit_profile'))
 
-@app.route('/change_password', methods=['GET', 'POST'])
-@login_required
-def change_password():
-    form = PasswordChangeForm()
-    if form.validate_on_submit():
-        if current_user.check_password(form.password.data):
-            current_user.set_password(form.password2.data)
-            flash('Your password has been changed.')
-            db.session.commit()
-        else:
-            flash('Your password is still the same.')
-        return redirect(url_for('change_password'))
-    if current_user.photo == None:
-        return render_template('password_change.html', form=form)
-    file_url = photos.url(current_user.photo)
-    return render_template('password_change.html', form=form, file_url=file_url)
+# @app.route('/change_password', methods=['GET', 'POST'])
+# @login_required
+# def change_password():
+#     form = PasswordChangeForm()
+#     if form.validate_on_submit():
+#         if current_user.check_password(form.password.data):
+#             current_user.set_password(form.password2.data)
+#             flash('Your password has been changed.')
+#             db.session.commit()
+#         else:
+#             flash('Your password is still the same.')
+#         return redirect(url_for('change_password'))
+#     if current_user.photo == None:
+#         return render_template('password_change.html', form=form)
+#     file_url = photos.url(current_user.photo)
+#     return render_template('password_change.html', form=form, file_url=file_url)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
