@@ -1,5 +1,5 @@
 FLASK_APP=pneu.py
-FLASK_DEBUG=0
+FLASK_DEBUG=1
 MAIL_SERVER=smtp.googlemail.com
 MAIL_PORT=465
 MAIL_USE_TLS=False
