@@ -235,7 +235,8 @@ def history():
     prev_url = url_for('history', page=imag.prev_num) \
         if imag.has_prev else None
     if current_user.photo == None:
-        return render_template('history.html')
+        return render_template('history.html', imag=imag.items, next_url=next_url,
+                               prev_url=prev_url)
     file_url = photos.url(current_user.photo)
     return render_template('history.html', file_url=file_url, imag=imag.items, next_url=next_url,
                            prev_url=prev_url)
@@ -310,6 +311,13 @@ def delete_file(folder, filename):
     db.session.commit()
     os.remove(file_path)
     return redirect(url_for('history'))
+
+
+@app.route('/view/<folder>/<filename>')
+def view_file(folder, filename):
+    file_p = folder+"/"+filename
+    file_url = images.url(file_p)
+    return render_template("browser.html", file_url=file_url)
 
 @app.route('/about')
 def about():
