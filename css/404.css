@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.name {
+  position: absolute;
+  top: 20px;
+  left: 100px;
+  font-size: 20px;
+  color: white;
+}
+
+@-webkit-keyframes changeColor {
+  0% {
+    color: purple;
+  }
+  25% {
+    color: yellow;
+  }
+  50% {
+    color: blue;
+  }
+  75% {
+    color: red;
+  }
+  100% {
+    color: black;
+  }
+}
+
+@keyframes changeColor {
+  0% {
+    color: purple;
+  }
+  25% {
+    color: yellow;
+  }
+  50% {
+    color: blue;
+  }
+  75% {
+    color: red;
+  }
+  100% {
+    color: black;
+  }
+}
+
+body {
+  background-color: darkred;
+  color: white;
+}
+
+body header {
+  height: 60px;
+  padding: 20px;
+  border-bottom: 2px solid white;
+  -webkit-box-shadow: 1px 1px 5px white;
+          box-shadow: 1px 1px 5px white;
+}
+
+body a {
+  color: white;
+}
+
+body a:hover {
+  opacity: .7;
+}
+
+body .content {
+  padding: 7%;
+  text-align: center;
+}
+
+body .content .row1 span {
+  font-size: 100px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+body .content .row1 #zero {
+  text-shadow: 5px 5px 5px white;
+  display: inline-block;
+  -webkit-animation-name: changeColor;
+          animation-name: changeColor;
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+body .content .row1 #zero:hover {
+  color: brown;
+  -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+  -webkit-transition: -webkit-transform 2s;
+  transition: -webkit-transform 2s;
+  transition: transform 2s;
+  transition: transform 2s, -webkit-transform 2s;
+}
+
+body .content .row1 p {
+  margin-top: 20px;
+}
+
+body .content .row2 {
+  margin: 50px 0;
+}
+
+body .content .row2 h3 {
+  text-transform: uppercase;
+  margin: 30px 0;
+}
+
+body .content .row2 a {
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 30px;
+  font-weight: 200px;
+}
+/*# sourceMappingURL=404.css.map */

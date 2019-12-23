@@ -6,18 +6,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ImageView || PneumoDoc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashoard.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css')}}">
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    {{ moment.include_moment() }}
+
     <style>
-        html {
-            background: url({{ file_url }}) no-repeat center center fixed;
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
+        body{
+            overflow-y: hidden;
+        }
+        .img_container {
+            border: 1px solid red;
+            width: 60%;
+            margin: 0 auto;
+            box-shadow: 2px 10px 5px gray;
+            margin-top: 40px;
+        }
+
+        .img_container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .zoom {
+            transform: scale(1.3);
+            transition: transform 1s;
         }
     </style>
 </head>
 
 <body>
+    <section class="container">
+        <header>
+            <h3><span>my</span>Dashboard</h3>
+        </header>
+        <div class="navButton">
+            <i class="fa fa-arrow-right" id="control"></i>
+        </div>
+        <section class="wrapper">
+            <section class="sidebar" id="sidebar">
+
+                <div class="row1">
+                    {% if file_url %}
+                    <img src="{{ file_url }}" alt="">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='img/user.png')}}" alt="">
+                    {% endif %}
+                    <span class="details">
+                        <h3>{{ current_user.lastname }}</h3>
+                        <p>{{ current_user.profession }}</p>
+                    </span>
+
+                </div>
+                <div class="row2">
+                    <ul>
+                        <li><a href="{{ url_for('dashboard') }}"> <i class="fa fa-dashboard"></i> Dashboard </a>
+                        </li>
+                        <li><a href="{{ url_for('history') }}"> <i class="fa fa-history"></i> History </a></li>
+                        <li><a href="{{ url_for('edit_profile') }}"> <i class="fa fa-cogs"></i> Settings </a></li>
+                        <li><a href="{{ url_for('change_password') }}"> <i class="fa fa-key"></i> Change Password
+                            </a></li>
+                        <li><a href="{{ url_for('logout') }}"> <i class="fa fa-sign-out"></i> Logout </a></li>
+                    </ul>
+                </div>
+            </section>
+            <section class="content">
+                <section class="message">
+                    <h3>View Patient Image <span id="time"></span></h3>
+                    <p>
+                        <!--insert your message here-->
+                    </p>
+                    {% if not current_user.email_confirmed %}
+                    <p>Your email is not confirmed. <a href="{{ url_for('resend_email_confirmation') }}"
+                            style="color: #73b9db;cursor: pointer;text-decoration: none;">Resend Email
+                            Confirmation</a></p>
+                    {% endif %}
+                </section>
+
+                <section class="content_items">
+                    <div class="patient_name">
+                        <h2>Make patient name appear here, so Doctor can keep track of which image he opened</h2>
+                    </div>
+                    <br>
+                    <div class="img_container"> <img src="{{ file_url }}" alt="" id="p_img"></div>
+                </section>
+            </section>
+        </section>
+    </section>
+
 </body>
+<script>
+    let control = document.getElementById("control");
+    let sidebar = document.getElementById("sidebar");
+    let timeEl = document.getElementById("time");
+    let P_img = document.getElementById("p_img");
+    //view Image effect
+    p_img.addEventListener("click", function () {
+        console.log(this.classList.contains("zoom"))
+        if (this.classList.contains("zoom")) {
+            this.classList.remove("zoom");
+        }
+        else{
+            this.classList.add("zoom");
+            this.style.transition = "all 1s"
+        }
+
+    })
+    //Time update
+    const GetTime = () => {
+        let date = new Date();
+        myTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        timeEl.innerHTML = myTime;
+    };
+    setInterval(GetTime, 100)
+
+    //Click event on sidebar
+    control.addEventListener("click", () => {
+        let moveEl = sidebar.style.left;
+        if (moveEl === "-350px") {
+            sidebar.style.left = 0;
+            control.classList.remove("fa-arrow-right");
+            control.classList.add("fa-arrow-left");
+        } else {
+            sidebar.style.left = "-350px";
+            control.classList.add("fa-arrow-right");
+            control.classList.remove("fa-arrow-left")
+
+        }
+    })
+</script>
 
 </html>

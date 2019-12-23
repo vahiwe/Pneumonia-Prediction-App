@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.name {
+  position: absolute;
+  top: 20px;
+  left: 100px;
+  font-size: 20px;
+  color: white;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.content_items {
+  display: block !important;
+}
+
+.content_items table,
+.content_items th,
+.content_items td {
+  border: 1px solid gray;
+  border-collapse: collapse;
+  padding: 10px;
+}
+
+.content_items .table {
+  height: 500px;
+  width: 100%;
+  overflow: scroll;
+}
+
+.content_items table {
+  margin: 0 auto;
+  text-align: left;
+  width: 100%;
+}
+
+.content_items th {
+  padding: 5px 10px;
+  text-align: center;
+  padding-left: 0;
+  background-color: black;
+  color: white;
+}
+
+.content_items td:first-child {
+  text-align: center;
+  padding-left: 0;
+}
+
+.content_items td .delete, .content_items td .send {
+  display: inline-block;
+  width: 100px;
+  background-color: red;
+  color: white;
+  border: 1px solid red;
+  padding: 5px 20px;
+  margin-bottom: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.content_items td .send {
+  background-color: green;
+  border: 1px solid green;
+}
+
+@media screen and (max-width: 992px) {
+  table {
+    width: 130% !important;
+  }
+}
+/*# sourceMappingURL=history.css.map */
