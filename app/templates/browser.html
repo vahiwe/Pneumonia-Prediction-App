@@ -17,6 +17,7 @@
         .content {
             overflow-y: scroll;
         }
+
         .img_container {
             border: 1px solid red;
             width: 60%;
@@ -87,7 +88,13 @@
 
                 <section class="content_items">
                     <div class="patient_name">
-                        <h2>Make patient name appear here, so Doctor can keep track of which image he opened</h2>
+                        <h2> {% if item.patient is none %}
+                            Anonymous
+                            {% elif item.patient == ""%}
+                            Anonymous
+                            {% else %}
+                            {{ item.patient}}
+                            {% endif %}, taken on {{ moment(item.timestamp).format('MMMM Do YYYY, h:mm:ss a') }}</h2>
                     </div>
                     <br>
                     <div class="img_container"> <img src="{{ file_url }}" alt="" id="p_img"></div>
@@ -107,8 +114,7 @@
         console.log(this.classList.contains("zoom"))
         if (this.classList.contains("zoom")) {
             this.classList.remove("zoom");
-        }
-        else{
+        } else {
             this.classList.add("zoom");
             this.style.transition = "all 1s"
         }
