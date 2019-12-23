@@ -279,30 +279,25 @@ def upload_file():
         # Creating payload for TensorFlow serving request
         data = json.dumps({"signature_name": "serving_default",
                     "instances": img.tolist()})
-        print('Data: {} ... {}'.format(data[:50], data[len(data)-52:]))
-
+        
         # Making POST request 
         # headers = {"content-type": "application/json"}
         # json_response = requests.post(
-        #     'http://localhost:8501/v1/models/pneu_model:predict', data=data, headers=headers)
+        #     'http://localhost:8501/v1/models/pybenders_model:predict', data=data, headers=headers)
 
         # Decoding results from TensorFlow Serving server
-        # predictions = json.loads(json_response.text)['predictions']
-        # print(predictions)
-
-        # Returning JSON response to the frontend
-        # return jsonify(inception_v3.decode_predictions(np.array(pred['predictions']))[0])
-        flash(img.shape)
-        # return redirect(url_for("dashboard", extracted_text=img.shape, img_src=names))
+        # predictions = json_response.json()['predictions'][0][0]
+        # flash(predictions)
         return redirect(url_for("dashboard"))
-    if current_user.photo == None:
-        return render_template('dashboard.html', form=form)
-    file_url = photos.url(current_user.photo)
     image_count = History.query.filter().order_by(History.timestamp.desc()).count()
+    if current_user.photo == None:
+        return render_template('dashboard.html', form=form, image_count=image_count)
+    file_url = photos.url(current_user.photo)
     return render_template("dashboard.html", form=form, file_url=file_url, image_count=image_count)
 
 
 @app.route('/delete/<folder>/<filename>')
+@login_required
 def delete_file(folder, filename):
     file_p = folder+"/"+filename
     file_path = images.path(folder+"/"+filename)
@@ -314,10 +309,12 @@ def delete_file(folder, filename):
 
 
 @app.route('/view/<folder>/<filename>')
+@login_required
 def view_file(folder, filename):
     file_p = folder+"/"+filename
     file_url = images.url(file_p)
-    return render_template("browser.html", file_url=file_url)
+    item = History.query.filter_by(photo=file_p).first_or_404()
+    return render_template("browser.html", file_url=file_url, item=item)
 
 @app.route('/about')
 def about():
