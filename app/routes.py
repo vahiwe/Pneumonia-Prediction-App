@@ -333,7 +333,10 @@ def view_file(folder, filename):
     file_p = folder+"/"+filename
     file_url = images.url(file_p)
     item = History.query.filter_by(photo=file_p).first_or_404()
-    return render_template("browser.html", file_url=file_url, item=item)
+    if current_user.photo == None:
+        return render_template("browser.html", file_url=file_url, item=item)
+    file_ur = photos.url(current_user.photo)
+    return render_template("browser.html", file_url=file_url, item=item, profilepic=file_ur)
 
 @app.route('/about')
 def about():

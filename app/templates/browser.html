@@ -50,8 +50,8 @@
             <section class="sidebar" id="sidebar">
 
                 <div class="row1">
-                    {% if file_url %}
-                    <img src="{{ file_url }}" alt="">
+                    {% if profilepic %}
+                    <img src="{{ profilepic }}" alt="">
                     {% else %}
                     <img src="{{ url_for('static', filename='img/user.png')}}" alt="">
                     {% endif %}
