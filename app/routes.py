@@ -276,34 +276,34 @@ def upload_file():
                     "instances": img.tolist()})
         
         # # Making POST request 
-        # headers = {"content-type": "application/json"}
-        # json_response = requests.post(
-        #     'http://localhost:8501/v1/models/pybenders_model:predict', data=data, headers=headers)
+        headers = {"content-type": "application/json"}
+        json_response = requests.post(
+            "IP_ROUTE", data=data, headers=headers)
 
-        # # Decoding results from TensorFlow Serving server
-        # predictions = json_response.json()['predictions'][0][0]
+        # Decoding results from TensorFlow Serving server
+        predictions = json_response.json()['predictions'][0][0]
 
-        # # Give a true or false value to the prediction
-        # if predictions == 1:
-        #     predictval = 0
-        # elif predictions < 1 and predictions > 5.6:
-        #     predictval = 1
-        # else:
-        #     predictval = 0
+        # Give a true or false value to the prediction
+        if predictions == 1:
+            predictval = 0
+        elif predictions < 1 and predictions > 5.6:
+            predictval = 1
+        else:
+            predictval = 0
 
-        # # Save to database
-        # upload = History(photo=filename, patient=form.patient.data,
-        #                  photo_url=file_url, user_email=current_user.email, status=predictval)
-        # db.session.add(upload)
-        # db.session.commit()
+        # Save to database
+        upload = History(photo=filename, patient=form.patient.data,
+                         photo_url=file_url, user_email=current_user.email, status=predictval)
+        db.session.add(upload)
+        db.session.commit()
 
-        # # Give diagnosis
-        # if predictval == 1:
-        #     resultstat == 'POSITIVE'
-        # elif predictval == 0:
-        #     resultstat == 'NEGATIVE'
+        # Give diagnosis
+        if predictval == 1:
+            resultstat = 'POSITIVE'
+        elif predictval == 0:
+            resultstat = 'NEGATIVE'
 
-        # flash(resultstat)
+        flash(resultstat)
         return redirect(url_for("dashboard"))
     image_count = History.query.filter().order_by(History.timestamp.desc()).count()
     if current_user.photo == None:
