@@ -268,11 +268,6 @@ def upload_file():
         file_url = images.url(filename)
         print(file_url)
 
-        # Save to database
-        upload = History(photo=filename, patient=form.patient.data, photo_url=file_url ,user_email=current_user.email)
-        db.session.add(upload)
-        db.session.commit()
-        
         # Decoding and pre-processing base64 image
         img = load(file)
 
@@ -280,14 +275,35 @@ def upload_file():
         data = json.dumps({"signature_name": "serving_default",
                     "instances": img.tolist()})
         
-        # Making POST request 
+        # # Making POST request 
         # headers = {"content-type": "application/json"}
         # json_response = requests.post(
         #     'http://localhost:8501/v1/models/pybenders_model:predict', data=data, headers=headers)
 
-        # Decoding results from TensorFlow Serving server
+        # # Decoding results from TensorFlow Serving server
         # predictions = json_response.json()['predictions'][0][0]
-        # flash(predictions)
+
+        # # Give a true or false value to the prediction
+        # if predictions == 1:
+        #     predictval = 0
+        # elif predictions < 1 and predictions > 5.6:
+        #     predictval = 1
+        # else:
+        #     predictval = 0
+
+        # # Save to database
+        # upload = History(photo=filename, patient=form.patient.data,
+        #                  photo_url=file_url, user_email=current_user.email, status=predictval)
+        # db.session.add(upload)
+        # db.session.commit()
+
+        # # Give diagnosis
+        # if predictval == 1:
+        #     resultstat == 'POSITIVE'
+        # elif predictval == 0:
+        #     resultstat == 'NEGATIVE'
+
+        # flash(resultstat)
         return redirect(url_for("dashboard"))
     image_count = History.query.filter().order_by(History.timestamp.desc()).count()
     if current_user.photo == None:

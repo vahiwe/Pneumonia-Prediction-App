@@ -72,7 +72,13 @@
                         {% if messages %}
                         {% for message in messages %}
                         <br><br>
+                        {% if message == "POSITIVE" %}
+                        <p style="color: red;">Your result is {{ message }}. Please consult the doctor.</p>
+                        {% elif message == "NEGATIVE" %}
+                        <p style="color: blue;">Your result is {{ message }}.</p>
+                        {% else %}
                         <p style="color: blue;">[{{ message }}]</p>
+                        {% endif %}
                         {% endfor %}
                         {% endif %}
                         {% endwith %}
