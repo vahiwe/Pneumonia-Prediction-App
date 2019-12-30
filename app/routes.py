@@ -315,6 +315,9 @@ def upload_file():
 @app.route('/delete/<folder>/<filename>')
 @login_required
 def delete_file(folder, filename):
+    if current_user.email != "admin@example.com":
+        flash('Sorry only admin can delete images')
+        return redirect(url_for('history'))
     file_p = folder+"/"+filename
     file_path = images.path(folder+"/"+filename)
     item = History.query.filter_by(photo=file_p).first_or_404()

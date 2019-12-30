@@ -62,6 +62,14 @@
                                 style="color: #73b9db;cursor: pointer;text-decoration: none;">Resend Email
                                 Confirmation</a></p>
                         {% endif %}
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <br><br>
+                        <p style="color: blue;">[{{ message }}]</p>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
                     </section>
 
                     <section class="content_items">
