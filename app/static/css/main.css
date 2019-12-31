@@ -275,6 +275,45 @@ main .container footer {
   text-align: center;
 }
 
+.contact {
+  background-color: whitesmoke;
+  margin-top: 50px;
+  padding: 50px 0;
+}
+
+.contact h3 {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.contact form {
+  min-width: 300px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px 30px;
+  border: 1px solid #23cec5;
+}
+
+.contact form label {
+  margin-top: 20px;
+  display: block;
+  font-weight: bold;
+}
+
+.contact form input,
+.contact form textarea {
+  width: 100%;
+  border: 1px solid #23cec5;
+  font-size: 20px;
+  padding: 10px 20px;
+}
+
+.contact form #submit {
+  background-color: #23cec5;
+  width: 200px;
+  margin: 20px 0;
+}
+
 @media screen and (max-width: 650px) {
   header .navButton {
     border: 1px solid white;
@@ -315,7 +354,7 @@ main .container footer {
     margin-left: 0 !important;
   }
   .row1 h2 {
-    font-size: .7em !important;
+    font-size: 0.7em !important;
   }
 }
 /*# sourceMappingURL=main.css.map */
