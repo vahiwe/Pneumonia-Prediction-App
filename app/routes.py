@@ -3,10 +3,10 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, s
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
-from app.models import User, History
+from app.models import User, History, Feedback
 from werkzeug.urls import url_parse
 from datetime import datetime, timedelta
-from app.forms import EditProfileForm, UploadForm, PasswordChangeForm, EmailForm, PasswordForm
+from app.forms import EditProfileForm, UploadForm, PasswordChangeForm, EmailForm, PasswordForm, FeedbackForm
 from PIL import Image
 from threading import Thread
 import time
@@ -40,10 +40,22 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 CORS(app)
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET'])
+@app.route('/index', methods=['GET'])
 def index():
-    return render_template('index.html')
+    form = FeedbackForm()
+    return render_template('index.html', form=form)
+
+@app.route('/', methods=['POST'])
+@app.route('/index', methods=['POST'])
+def feeds():
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        feedback = Feedback(name=form.name.data, email=form.email.data, message=form.message.data)
+        db.session.add(feedback)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('index.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

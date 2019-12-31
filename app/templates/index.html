@@ -83,14 +83,24 @@
                 </div>
                 <div class="contact">
                     <h3>Send us a message</h3>
-                    <form action="">
+                    <form action="" method='post'>
+                        {{ form.hidden_tag() }}
                         <label for="name">Name:</label>
-                        <input type="text" name="name" id="name" placeholder="Enter your full name" required>
+                        {{ form.name(placeholder="Enter your full name")}}
+                        {% for error in form.name.errors %}
+                        <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
                         <label for="email">Email Address:</label>
-                        <input type="email" placeholder="Enter your email address" required>
+                        {{ form.email(placeholder="Enter your email address")}}
+                        {% for error in form.email.errors %}
+                        <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
                         <label for="message">Your Message:</label>
-                        <textarea name="message" id="message" cols="30" rows="10" placeholder="Kindly enter your message..." required></textarea>
-                        <input type="submit" id="submit" value="Send Message">
+                        {{ form.message(cols="30", rows="10", placeholder="Kindly enter your message")}}
+                        {% for error in form.message.errors %}
+                        <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                        <p>{{ form.submit(id="submit") }}</p>
                     </form>
                 </div>
                 <!-- <img src="img/img4.png" alt="" srcset="">
