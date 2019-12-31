@@ -55,12 +55,12 @@
                         </h3>
                         {% if msg %}
                         <div>
-                            <p style="color: red;">{{ msg }}</p>
+                            <p style="color: red; font-size: 20px;">{{ msg }}</p>
                         </div>
                         {% endif %}
                         {% if extracted_text %}
                         <div>
-                            <p style="color: red;">{{ extracted_text }}</p>
+                            <p style="color: red; font-size: 20px;">{{ extracted_text }}</p>
                         </div>
                         {% endif %}
                         {% if not current_user.email_confirmed %}
@@ -73,11 +73,11 @@
                         {% for message in messages %}
                         <br><br>
                         {% if message == "POSITIVE" %}
-                        <p style="color: red;">Your result is {{ message }}. Please consult the doctor.</p>
+                        <p style="color: red; font-size: 20px;">Your result is {{ message }}. Please consult the doctor.</p>
                         {% elif message == "NEGATIVE" %}
-                        <p style="color: blue;">Your result is {{ message }}.</p>
+                        <p style="color: blue; font-size: 20px;">Your result is {{ message }}.</p>
                         {% else %}
-                        <p style="color: blue;">[{{ message }}]</p>
+                        <p style="color: blue; font-size: 20px;">[{{ message }}]</p>
                         {% endif %}
                         {% endfor %}
                         {% endif %}
