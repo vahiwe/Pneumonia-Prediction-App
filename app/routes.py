@@ -298,7 +298,7 @@ def upload_file():
         # Give a true or false value to the prediction
         if predictions == 1:
             predictval = 0
-        elif predictions < 1 and predictions > 5.6:
+        elif predictions < 1 and predictions > 0.6:
             predictval = 1
         else:
             predictval = 0
