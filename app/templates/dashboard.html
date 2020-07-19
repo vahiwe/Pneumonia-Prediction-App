@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashoard.css')}}">
+    
 
 </head>
 
@@ -84,12 +85,15 @@
                         {% endif %}
                         {% endwith %}
                         <!--insert your message here-->
+                        <p style="color: red; font-size: 20px;" id="neg"></p>
+                        <p style="color: blue; font-size: 20px;" id="pos"></p>
                     </section>
 
                     <section class="content_items">
+                        <canvas id="can" width="180" height="180"></canvas>
                         <div class="upload">
                             <h3>Upload New Image</h3>
-                            <form method='post' enctype='multipart/form-data'>
+                            <!-- <form method='post' enctype='multipart/form-data'>
                                 {{ form.hidden_tag() }}
                                 <div class="form-group">
                                     {{ form.patient(placeholder="Patient Name",style="background-color:rgb(60, 60, 60);") }}
@@ -105,11 +109,15 @@
                                     {% endfor %}
                                 </div>
                                 {{ form.submit }}
-                            </form>
+                            </form> -->
+                            <img id="img" src="{{ url_for('static', filename='img/pukado.png')}}">
+                            <input type="file" multiple="false" accept="image/*" id="finput" onchange="upload()">
+                            <button onclick="predict()">Upload</button>
+
                         </div>
                         <div class="upload">
                             <h3>History</h3><span>{{ image_count }}</span>
-                            <p>Images have been processed.</p>
+                            <p>Images processed.</p>
                             <a href="{{ url_for('history') }}">Browse</a>
                         </div>
                     </section>
@@ -120,6 +128,41 @@
 
     </main>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"> </script>
+<script src="http://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"> </script>
+<script>
+    function upload() {
+        var canvas = document.getElementById("can");
+        var input = document.getElementById("finput");
+        var image= new SimpleImage(input);
+        image.drawTo(canvas)}
+</script>
+{% block javascript %}
+<script>
+    var model;
+    var positiveResult = document.getElementById("pos");
+    var negativeResult = document.getElementById("neg");
+    async function initialize() {
+        
+        model = await tf.loadGraphModel("{{ url_for('static', filename='model/model.json')}}");
+    }
+    async function predict() {
+        // action for the submit button
+        let image = document.getElementById("img")  
+        let tensorImg =   tf.browser.fromPixels(image).resizeNearestNeighbor([180, 180, 3]).toFloat().expandDims();
+        prediction = await model.predict(tensorImg).data();
+        console.log(prediction)
+        if (prediction[0] === 0) {
+            positiveResult.innerHTML = "No trace of pneumonia found";
+        } else if (prediction[0] === 1) {
+            negativeResult.innerHTML = "Traces of pneumonia found";
+        } else {
+            negativeResult.innerHTML = "This is Something else";
+        }
+    }
+    initialize();
+</script>
+{% endblock %}
 <script>
     let control = document.getElementById("control");
     let sidebar = document.getElementById("sidebar");

@@ -1,4 +1,5 @@
 flask
+requests
 python-dotenv
 flask-wtf
 flask-sqlalchemy
@@ -12,4 +13,5 @@ flask-cors
 flask-uploads
 flask-moment
 itsdangerous
+psycopg2-binary
 psycopg2

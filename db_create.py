@@ -8,7 +8,7 @@ db.drop_all()
 db.create_all()
 user = User(email="admin@example.com", firstname="John",
             lastname="Doe", gender="Male", profession="Radiologist")
-user.set_password("")
+user.set_password("12345")
 db.session.add(user)
 db.session.commit()
 
