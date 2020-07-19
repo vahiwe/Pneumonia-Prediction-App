@@ -53,19 +53,26 @@
                         </h3>
                         {% if msg %}
                         <div>
-                            <p style="color: red;">{{ msg }}</p>
+                            <p style="color: red; font-size: 20px;">{{ msg }}</p>
                         </div>
                         {% endif %}
                         {% if extracted_text %}
                         <div>
-                            <p style="color: red;">{{ extracted_text }}</p>
+                            <p style="color: red; font-size: 20px;">{{ extracted_text }}</p>
                         </div>
                         {% endif %}
                         {% with messages = get_flashed_messages() %}
                         {% if messages %}
                         {% for message in messages %}
                         <br><br>
-                        <p style="color: blue;">[{{ message }}]</p>
+                        {% if message == "POSITIVE" %}
+                        <p style="color: red; font-size: 20px;">Trace of Pneumonia found. Please consult the doctor.
+                        </p>
+                        {% elif message == "NEGATIVE" %}
+                        <p style="color: blue; font-size: 20px;">No Trace of Pneumonia found.</p>
+                        {% else %}
+                        <p style="color: blue; font-size: 20px;">[{{ message }}]</p>
+                        {% endif %}
                         {% endfor %}
                         {% endif %}
                         {% endwith %}

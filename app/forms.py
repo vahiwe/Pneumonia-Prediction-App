@@ -4,6 +4,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Le
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class 
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from app.models import User
+from wtforms.widgets import TextArea
 
 photos = UploadSet('photos', IMAGES)
 
@@ -20,6 +21,17 @@ class UploadForm(FlaskForm):
     patient = StringField(u'Patient Name:')
     photo = FileField(validators=[FileAllowed(photos, 'Image Only!'), FileRequired('Choose a file!')])
     submit = SubmitField('Upload')
+
+
+class FeedbackForm(FlaskForm):
+    name = StringField(u'Name:', validators=[
+                       DataRequired(), Length(min=1, max=40)])
+    email = StringField(u'Email Address:', validators=[
+                        DataRequired(), Email(), Length(min=6, max=40)])
+    message = StringField(u'Your Message:', validators=[
+                          DataRequired(), Length(min=6, max=120)], widget=TextArea())
+    submit = SubmitField('Send Message')
+
 
 class LoginForm(FlaskForm):
     email = StringField(u'Email:', validators=[DataRequired(), Email(), Length(min=6,max=40)])

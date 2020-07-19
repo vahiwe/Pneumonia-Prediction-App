@@ -3,10 +3,10 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, s
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
-from app.models import User, History
+from app.models import User, History, Feedback
 from werkzeug.urls import url_parse
 from datetime import datetime, timedelta
-from app.forms import EditProfileForm, UploadForm, PasswordChangeForm, EmailForm, PasswordForm
+from app.forms import EditProfileForm, UploadForm, PasswordChangeForm, EmailForm, PasswordForm, FeedbackForm
 from PIL import Image
 from threading import Thread
 import time
@@ -40,10 +40,22 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 CORS(app)
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET'])
+@app.route('/index', methods=['GET'])
 def index():
-    return render_template('index.html')
+    form = FeedbackForm()
+    return render_template('index.html', form=form)
+
+@app.route('/', methods=['POST'])
+@app.route('/index', methods=['POST'])
+def feeds():
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        feedback = Feedback(name=form.name.data, email=form.email.data, message=form.message.data)
+        db.session.add(feedback)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('index.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -268,11 +280,6 @@ def upload_file():
         file_url = images.url(filename)
         print(file_url)
 
-        # Save to database
-        upload = History(photo=filename, patient=form.patient.data, photo_url=file_url ,user_email=current_user.email)
-        db.session.add(upload)
-        db.session.commit()
-        
         # Decoding and pre-processing base64 image
         img = load(file)
 
@@ -280,14 +287,35 @@ def upload_file():
         data = json.dumps({"signature_name": "serving_default",
                     "instances": img.tolist()})
         
-        # Making POST request 
-        # headers = {"content-type": "application/json"}
-        # json_response = requests.post(
-        #     'http://localhost:8501/v1/models/pybenders_model:predict', data=data, headers=headers)
+        # # Making POST request 
+        headers = {"content-type": "application/json"}
+        json_response = requests.post(
+            "IP_ROUTE", data=data, headers=headers)
 
         # Decoding results from TensorFlow Serving server
-        # predictions = json_response.json()['predictions'][0][0]
-        # flash(predictions)
+        predictions = json_response.json()['predictions'][0][0]
+
+        # Give a true or false value to the prediction
+        if predictions == 1:
+            predictval = 0
+        elif predictions < 1 and predictions > 0.6:
+            predictval = 1
+        else:
+            predictval = 0
+
+        # Save to database
+        upload = History(photo=filename, patient=form.patient.data,
+                         photo_url=file_url, user_email=current_user.email, status=predictval)
+        db.session.add(upload)
+        db.session.commit()
+
+        # Give diagnosis
+        if predictval == 1:
+            resultstat = 'POSITIVE'
+        elif predictval == 0:
+            resultstat = 'NEGATIVE'
+
+        flash(resultstat)
         return redirect(url_for("dashboard"))
     image_count = History.query.filter().order_by(History.timestamp.desc()).count()
     if current_user.photo == None:
@@ -299,6 +327,9 @@ def upload_file():
 @app.route('/delete/<folder>/<filename>')
 @login_required
 def delete_file(folder, filename):
+    if current_user.email != "admin@example.com":
+        flash('Sorry only admin can delete images')
+        return redirect(url_for('history'))
     file_p = folder+"/"+filename
     file_path = images.path(folder+"/"+filename)
     item = History.query.filter_by(photo=file_p).first_or_404()
@@ -314,7 +345,10 @@ def view_file(folder, filename):
     file_p = folder+"/"+filename
     file_url = images.url(file_p)
     item = History.query.filter_by(photo=file_p).first_or_404()
-    return render_template("browser.html", file_url=file_url, item=item)
+    if current_user.photo == None:
+        return render_template("browser.html", file_url=file_url, item=item)
+    file_ur = photos.url(current_user.photo)
+    return render_template("browser.html", file_url=file_url, item=item, profilepic=file_ur)
 
 @app.route('/about')
 def about():

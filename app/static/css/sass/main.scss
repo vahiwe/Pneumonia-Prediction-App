@@ -152,7 +152,7 @@ main {
 
       .other {
         .row5 {
-          margin: 0 auto ;
+          margin: 0 auto;
           max-width: 800px;
         }
       }
@@ -168,7 +168,6 @@ main {
           background-color: #23cec5;
           color: white;
           border: 1px solid #23cec5;
-         
         }
 
         button:hover {
@@ -185,6 +184,41 @@ main {
       color: #23cec5;
       background-color: white;
       text-align: center;
+    }
+  }
+}
+.contact {
+  background-color: whitesmoke;
+  margin-top: 50px;
+  padding: 50px 0;
+  h3 {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  form {
+    min-width: 300px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px 30px;
+    border: 1px solid #23cec5;
+
+    label {
+      margin-top: 20px;
+      display: block;
+      font-weight: bold;
+    }
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #23cec5;
+      font-size: 20px;
+      padding: 10px 20px;
+    }
+    #submit {
+      background-color: #23cec5;
+      width: 200px;
+      margin: 20px 0;
     }
   }
 }
@@ -227,7 +261,7 @@ main {
   .row1 {
     margin-left: 0 !important;
     h2 {
-      font-size: .7em !important;
+      font-size: 0.7em !important;
     }
   }
 }

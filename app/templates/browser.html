@@ -50,8 +50,8 @@
             <section class="sidebar" id="sidebar">
 
                 <div class="row1">
-                    {% if file_url %}
-                    <img src="{{ file_url }}" alt="">
+                    {% if profilepic %}
+                    <img src="{{ profilepic }}" alt="">
                     {% else %}
                     <img src="{{ url_for('static', filename='img/user.png')}}" alt="">
                     {% endif %}
@@ -77,6 +77,11 @@
                     <p>
                         <!--insert your message here-->
                     </p>
+                    {% if not current_user.email_confirmed %}
+                    <p>Your email is not confirmed. <a href="{{ url_for('resend_email_confirmation') }}"
+                            style="color: #73b9db;cursor: pointer;text-decoration: none;">Resend Email
+                            Confirmation</a></p>
+                    {% endif %}
                 </section>
 
                 <section class="content_items">

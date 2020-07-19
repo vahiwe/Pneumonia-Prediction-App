@@ -43,3 +43,11 @@ class History(db.Model):
     status = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_email = db.Column(db.String(64), db.ForeignKey('user.email'))
+
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120))
+    email = db.Column(db.String(64))
+    message = db.Column(db.String(120))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)

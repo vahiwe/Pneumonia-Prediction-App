@@ -55,6 +55,14 @@
                         <p>
                             <!--insert your message here-->
                         </p>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <br><br>
+                        <p style="color: blue;">[{{ message }}]</p>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
                     </section>
 
                     <section class="content_items">
@@ -72,19 +80,31 @@
                                     <td>{{ loop.index }}</td>
                                     {% if img.patient is none %}
                                     <td>Anonymous</td>
-                                    {% elif img.patient == ""%}
+                                    {% elif img.patient == "" %}
                                     <td>Anonymous</td>
                                     {% else %}
                                     <td>{{ img.patient }}</td>
                                     {% endif %}
                                     <td>{{ moment(img.timestamp).fromNow() }}</td>
+                                    {% if img.status == 1 %}
+                                    <td>POSITIVE</td>
+                                    {% elif img.status == 0 %}
+                                    <td>NEGATIVE</td>
+                                    {% else %}
                                     <td>{{ img.status }}</td>
+                                    {% endif %}
+                                    {% if current_user.email == "admin@example.com" %}
                                     <td><a
                                             href="{{ url_for('delete_file', folder=img.photo.split("/")[0] ,filename=img.photo.split("/")[1]) }}"><span
                                                 class="delete">Delete</span></a>
                                         <a
                                             href="{{ url_for('view_file', folder=img.photo.split("/")[0] ,filename=img.photo.split("/")[1]) }}"><span
                                                 class="send">View</span></a></td>
+                                    {% else %}
+                                    <td><a
+                                            href="{{ url_for('view_file', folder=img.photo.split("/")[0] ,filename=img.photo.split("/")[1]) }}"><span
+                                                class="send">View</span></a></td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </table><br><br>
