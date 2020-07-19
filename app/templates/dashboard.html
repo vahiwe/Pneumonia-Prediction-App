@@ -90,8 +90,7 @@
                     </section>
 
                     <section class="content_items">
-                        <canvas id="can" width="180" height="180"></canvas>
-                        <div class="upload">
+                        <div class="upload" style="height: 400px;">
                             <h3>Upload New Image</h3>
                             <!-- <form method='post' enctype='multipart/form-data'>
                                 {{ form.hidden_tag() }}
@@ -110,9 +109,14 @@
                                 </div>
                                 {{ form.submit }}
                             </form> -->
-                            <img id="img" src="{{ url_for('static', filename='img/pukado.png')}}">
-                            <input type="file" multiple="false" accept="image/*" id="finput" onchange="upload()">
-                            <button onclick="predict()">Upload</button>
+                            <form method='post' enctype='multipart/form-data'></form>
+                                <div class="form-group">
+                                    <p><input type="file" multiple="false" accept="image/*" id="finput" onchange="loadFile(event)" style="display: none;"></p>
+                                    <p><label for="finput" style="cursor: pointer;">Click here to Upload Image</label></p>
+                                    <p><img id="output" width="180" height="180"></p> 
+                                    <a onclick="predict()" style="cursor: pointer;">Get prediction</a>
+                                </div>
+                            </form>
 
                         </div>
                         <div class="upload">
@@ -131,11 +135,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"> </script>
 <script src="http://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"> </script>
 <script>
-    function upload() {
-        var canvas = document.getElementById("can");
-        var input = document.getElementById("finput");
-        var image= new SimpleImage(input);
-        image.drawTo(canvas)}
+    var loadFile = function(event) {
+	var image = document.getElementById('output');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
 </script>
 {% block javascript %}
 <script>
@@ -148,8 +151,8 @@
     }
     async function predict() {
         // action for the submit button
-        let image = document.getElementById("img")  
-        let tensorImg =   tf.browser.fromPixels(image).resizeNearestNeighbor([180, 180, 3]).toFloat().expandDims();
+        let image = document.getElementById("output")  
+        let tensorImg =   tf.browser.fromPixels(image).resizeNearestNeighbor([180, 180]).toFloat().expandDims();
         prediction = await model.predict(tensorImg).data();
         console.log(prediction)
         if (prediction[0] === 0) {
@@ -157,7 +160,7 @@
         } else if (prediction[0] === 1) {
             negativeResult.innerHTML = "Traces of pneumonia found";
         } else {
-            negativeResult.innerHTML = "This is Something else";
+            negativeResult.innerHTML = "No image uploaded for prediction";
         }
     }
     initialize();
