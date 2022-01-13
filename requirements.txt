@@ -6,7 +6,7 @@ flask-migrate==2.5.2
 flask-login==0.4.1
 flask-mail==0.9.1
 pyjwt==1.7.1
-pillow==6.2.1
+pillow==9.0.0
 scikit-image
 flask-cors==3.0.8
 flask-uploads==0.2.1
